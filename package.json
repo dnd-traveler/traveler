@@ -2,7 +2,7 @@
   "name": "traveller",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://yeager-j.github.io/traveler/",
+  "homepage": "https://yeager-j.github.io/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^4.2.4",
