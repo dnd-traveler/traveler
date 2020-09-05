@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/traveler/static/css/main.9cd0f281.chunk.css",
-    "main.js": "/traveler/static/js/main.1026b0e3.chunk.js",
-    "main.js.map": "/traveler/static/js/main.1026b0e3.chunk.js.map",
-    "runtime-main.js": "/traveler/static/js/runtime-main.5e57a14d.js",
-    "runtime-main.js.map": "/traveler/static/js/runtime-main.5e57a14d.js.map",
-    "static/js/2.cde60186.chunk.js": "/traveler/static/js/2.cde60186.chunk.js",
-    "static/js/2.cde60186.chunk.js.map": "/traveler/static/js/2.cde60186.chunk.js.map",
+    "main.css": "/traveler/traveler/static/css/main.9cd0f281.chunk.css",
+    "main.js": "/traveler/traveler/static/js/main.1026b0e3.chunk.js",
+    "main.js.map": "/traveler/traveler/static/js/main.1026b0e3.chunk.js.map",
+    "runtime-main.js": "/traveler/traveler/static/js/runtime-main.5e57a14d.js",
+    "runtime-main.js.map": "/traveler/traveler/static/js/runtime-main.5e57a14d.js.map",
+    "traveler/static/js/2.cde60186.chunk.js": "/traveler/traveler/static/js/2.cde60186.chunk.js",
+    "traveler/static/js/2.cde60186.chunk.js.map": "/traveler/traveler/static/js/2.cde60186.chunk.js.map",
     "index.html": "/traveler/index.html",
-    "precache-manifest.cc836944e982109aaa76a144d78e6256.js": "/traveler/precache-manifest.cc836944e982109aaa76a144d78e6256.js",
+    "precache-manifest.a02223c6dfab1066db239d9e10f0feee.js": "/traveler/precache-manifest.a02223c6dfab1066db239d9e10f0feee.js",
     "service-worker.js": "/traveler/service-worker.js",
-    "static/css/main.9cd0f281.chunk.css.map": "/traveler/static/css/main.9cd0f281.chunk.css.map",
-    "static/js/2.cde60186.chunk.js.LICENSE.txt": "/traveler/static/js/2.cde60186.chunk.js.LICENSE.txt"
+    "traveler/static/css/main.9cd0f281.chunk.css.map": "/traveler/traveler/static/css/main.9cd0f281.chunk.css.map",
+    "traveler/static/js/2.cde60186.chunk.js.LICENSE.txt": "/traveler/traveler/static/js/2.cde60186.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5e57a14d.js",
-    "static/js/2.cde60186.chunk.js",
-    "static/css/main.9cd0f281.chunk.css",
-    "static/js/main.1026b0e3.chunk.js"
+    "traveler/static/js/runtime-main.5e57a14d.js",
+    "traveler/static/js/2.cde60186.chunk.js",
+    "traveler/static/css/main.9cd0f281.chunk.css",
+    "traveler/static/js/main.1026b0e3.chunk.js"
   ]
 }
