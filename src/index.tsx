@@ -11,8 +11,17 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 
+const storageState = localStorage.getItem('traveler-state');
+const persistedState = storageState ? JSON.parse(storageState) : {};
+
 const store = configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
+    preloadedState: persistedState
+});
+
+store.subscribe(() => {
+    console.log('storing...', store.getState());
+    localStorage.setItem('traveler-state', JSON.stringify(store.getState()));
 });
 
 const themes = {

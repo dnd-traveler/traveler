@@ -1,47 +1,57 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useWeather } from '../../util/use-weather';
-import { TravelerWeatherState } from '../../store/weather/weather.slice';
-import { useSelector } from 'react-redux';
+import { setWeather } from '../../store/weather/weather.slice';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Button, Typography } from 'antd';
 import { capitalize } from '../../util/utilities';
+import { TravelerTime } from '../../store/time/time.slice';
 
 const TravelerWeather = () => {
+    const dispatch = useDispatch();
     const time = useSelector((state: RootState) => state.time);
+    const weather = useSelector((state: RootState) => state.weather);
     const { generateWeather } = useWeather();
 
-    const [currentWeather, setCurrentWeather] = useState<TravelerWeatherState>();
-    const [oldTime, setOldTime] = useState<number>();
+    const forceGenerate = useCallback((time: TravelerTime) => {
+        const generatedWeather = generateWeather(time);
+        dispatch(setWeather(generatedWeather));
+    }, [generateWeather, dispatch]);
 
-    const forceGenerate = useCallback(() => {
-        setCurrentWeather(generateWeather(time));
-    }, [generateWeather, time]);
+    const forceGenerateHandler = useCallback(() => {
+        forceGenerate(time);
+    }, [time, forceGenerate]);
 
     useEffect(() => {
-        if (oldTime === undefined || (oldTime !== time.hour && time.hour % 6 === 0)) {
-            forceGenerate();
-            setOldTime(time.hour);
+        if ((time.hour % 6 === 0)) {
+            forceGenerate(time);
         }
-    }, [time, forceGenerate, oldTime]);
+    }, [time, forceGenerate]);
+
+    useEffect(() => {
+    }, [time]);
+
+    useEffect(() => {
+    }, [forceGenerate]);
 
     return (
         <div>
             <Typography.Paragraph>
                 <Typography.Text strong>Weather Conditions: </Typography.Text>
-                <Typography.Text>{capitalize(currentWeather?.weatherType || '')}</Typography.Text>
+                <Typography.Text>{capitalize(weather.weatherType || '')}</Typography.Text>
             </Typography.Paragraph>
 
             <Typography.Paragraph>
                 <Typography.Text strong>Temperature: </Typography.Text>
-                <Typography.Text>{currentWeather?.temperature}°F</Typography.Text>
+                <Typography.Text>{weather.temperature}°F</Typography.Text>
             </Typography.Paragraph>
 
             <Typography.Paragraph>
                 <Typography.Text strong>Wind Speed: </Typography.Text>
-                <Typography.Text>{currentWeather?.windSpeed}mph</Typography.Text>
+                <Typography.Text>{weather.windSpeed}mph</Typography.Text>
             </Typography.Paragraph>
 
-            <Button type="primary" danger onClick={forceGenerate}>Force Change</Button>
+            <Button type="primary" danger onClick={forceGenerateHandler}>Force Change</Button>
         </div>
     )
 };

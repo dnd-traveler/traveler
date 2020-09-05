@@ -18,6 +18,11 @@ const weatherSlice = createSlice({
     name: 'weather',
     initialState,
     reducers: {
+        setWeather(state, action: PayloadAction<TravelerWeatherState>) {
+            state.weatherType = action.payload.weatherType;
+            state.temperature = action.payload.temperature;
+            state.windSpeed = action.payload.windSpeed;
+        },
         setWeatherType(state, action: PayloadAction<TravelerWeatherType>) {
             state.weatherType = action.payload;
         },
@@ -30,5 +35,5 @@ const weatherSlice = createSlice({
     }
 });
 
-export const { setWeatherType, setTemperature, setWindSpeed } = weatherSlice.actions;
+export const { setWeather, setWeatherType, setTemperature, setWindSpeed } = weatherSlice.actions;
 export default weatherSlice.reducer;
