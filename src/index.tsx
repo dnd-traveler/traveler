@@ -4,10 +4,28 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+import { Provider } from 'react-redux';
+
+import rootReducer from './store';
+import { configureStore } from '@reduxjs/toolkit';
+
+import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
+
+const store = configureStore({
+    reducer: rootReducer
+});
+
+const themes = {
+    dark: `${process.env.PUBLIC_URL}/dark-theme.css`,
+    light: `${process.env.PUBLIC_URL}/light-theme.css`,
+};
+
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <Provider store={store}>
+        <ThemeSwitcherProvider themeMap={themes} defaultTheme="light" insertionPoint="styles-insertion-point">
+            <App />
+        </ThemeSwitcherProvider>
+    </Provider>,
   document.getElementById('root')
 );
 
