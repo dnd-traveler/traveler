@@ -2,6 +2,12 @@
   height: 100vh;
 }
 
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .logo {
   width: 120px;
   height: 31px;
@@ -9,6 +15,6 @@
   float: left;
   color: white;
   font-size: 24px;
-  line-height: 30px;
+  line-height: 28px;
   user-select: none;
 }

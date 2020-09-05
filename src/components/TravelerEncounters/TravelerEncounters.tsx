@@ -4,7 +4,11 @@ import { useEncounters } from '../../util/use-encounters';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useEffect, useState } from 'react';
-import { Button, Select, Space, Typography } from 'antd';
+import { Button, Select, Space, Tooltip, Typography } from 'antd';
+import dice from 'dice.js';
+import Chance from 'chance';
+
+const chance = new Chance.Chance();
 
 const TravelerEncounters = () => {
     const time = useSelector((state: RootState) => state.time);
@@ -16,7 +20,7 @@ const TravelerEncounters = () => {
 
     useEffect(() => {
         if (oldTime !== time.hour) {
-            if (time.hour < 7 || time.hour > 22) {
+            if (time.hour < 6 || time.hour > 20) {
                 setCurrentEncounter(generateNightEncounter());
             } else {
                 setCurrentEncounter(generateEncounter());
@@ -25,6 +29,34 @@ const TravelerEncounters = () => {
             setOldTime(time.hour);
         }
     }, [time, oldTime, generateEncounter, generateNightEncounter]);
+
+    const parsedEncounter = useCallback(() => {
+        if (!currentEncounter) {
+            return null;
+        }
+
+        const encounterStrArray = currentEncounter.split(' ');
+        const encounterJsx = encounterStrArray.map(word => {
+            const regex = /(\d+)?d(\d+)([+-]\d+)?/ig;
+
+            if (regex.test(word)) {
+                return (
+                    <span key={chance.guid()}>
+                        <Tooltip title={'Roll: ' + dice.roll(word.toLowerCase()).toString()}>
+                            <Typography.Text mark>{word}</Typography.Text>
+                        </Tooltip>
+                        {' '}
+                    </span>
+                );
+            } else {
+                return <Typography.Text key={chance.guid()}>{word + ' '}</Typography.Text>;
+            }
+        });
+
+        return (
+            <Typography.Paragraph>{encounterJsx}</Typography.Paragraph>
+        )
+    }, [currentEncounter]);
 
     const setEncounter = useCallback(() => {
         switch (forceEncounterType) {
@@ -49,7 +81,7 @@ const TravelerEncounters = () => {
 
     return (
         <div>
-            <Typography.Paragraph>{currentEncounter}</Typography.Paragraph>
+            <Typography.Paragraph>{parsedEncounter()}</Typography.Paragraph>
 
             <Space>
                 <Select

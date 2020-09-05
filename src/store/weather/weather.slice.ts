@@ -10,8 +10,8 @@ export interface TravelerWeatherState {
 
 const initialState: TravelerWeatherState = {
     weatherType: 'clear',
-    temperature: 70,
-    windSpeed: 0
+    temperature: 71,
+    windSpeed: 6
 };
 
 const weatherSlice = createSlice({

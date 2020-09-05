@@ -1,19 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { Card, Col, Layout, Row } from 'antd';
+import { Button, Card, Col, Layout, Row } from 'antd';
 import TravelerTime from './components/TravelerTime/TravelerTime';
 import TravelerNotes from './components/TravelerNotes/TravelerNotes';
 import TravelerEncounters from './components/TravelerEncounters/TravelerEncounters';
 import TravelerWeather from './components/TravelerWeather/TravelerWeather';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
+import { setHour, setSeason, setDay } from './store/time/time.slice';
 
 const {Header, Content, Footer} = Layout;
 
 function App() {
     const time = useSelector((state: RootState) => state.time);
+    const dispatch = useDispatch();
     const { switcher, status, themes } = useThemeSwitcher();
+    const [encounterLoading, setEncounterLoading] = useState(false);
+    const [weatherLoading, setWeatherLoading] = useState(false);
+
+    const resetState = useCallback(() => {
+        dispatch(setHour(7));
+        dispatch(setDay(1));
+        dispatch(setSeason('spring'));
+        localStorage.removeItem('traveler-state');
+    }, [dispatch]);
 
     useEffect(() => {
         switcher({
@@ -21,14 +32,29 @@ function App() {
         })
     }, [time, switcher, themes]);
 
+    useEffect(() => {
+        setEncounterLoading(true);
+
+        if (time.hour % 6 === 0) {
+            setWeatherLoading(true);
+        }
+
+        setTimeout(() => {
+            setEncounterLoading(false);
+            setWeatherLoading(false);
+        }, 500);
+    }, [time]);
+
     if (status === "loading") {
         return null;
     }
 
     return (
         <Layout className="layout">
-            <Header>
+            <Header className="header">
                 <div className="logo">Traveler</div>
+                <div style={{flex: 1}} />
+                <Button type="primary" danger onClick={resetState}>Reset Time</Button>
             </Header>
             <Content style={{padding: '50px'}}>
                 <Row gutter={16}>
@@ -41,12 +67,12 @@ function App() {
 
                 <Row gutter={16} style={{marginTop: 10}}>
                     <Col span={8}>
-                        <Card title="Weather">
+                        <Card title="Weather" loading={weatherLoading}>
                             <TravelerWeather />
                         </Card>
                     </Col>
                     <Col span={8}>
-                        <Card title="Encounters">
+                        <Card title="Encounters" loading={encounterLoading}>
                             <TravelerEncounters />
                         </Card>
                     </Col>
