@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/traveler/static/css/main.9cd0f281.chunk.css",
+    "main.js": "/traveler/static/js/main.602b1510.chunk.js",
+    "main.js.map": "/traveler/static/js/main.602b1510.chunk.js.map",
+    "runtime-main.js": "/traveler/static/js/runtime-main.5e57a14d.js",
+    "runtime-main.js.map": "/traveler/static/js/runtime-main.5e57a14d.js.map",
+    "static/js/2.3fc89b7e.chunk.js": "/traveler/static/js/2.3fc89b7e.chunk.js",
+    "static/js/2.3fc89b7e.chunk.js.map": "/traveler/static/js/2.3fc89b7e.chunk.js.map",
+    "index.html": "/traveler/index.html",
+    "precache-manifest.6e7f9b52c10c4650501b25a8044827a7.js": "/traveler/precache-manifest.6e7f9b52c10c4650501b25a8044827a7.js",
+    "service-worker.js": "/traveler/service-worker.js",
+    "static/css/main.9cd0f281.chunk.css.map": "/traveler/static/css/main.9cd0f281.chunk.css.map",
+    "static/js/2.3fc89b7e.chunk.js.LICENSE.txt": "/traveler/static/js/2.3fc89b7e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5e57a14d.js",
+    "static/js/2.3fc89b7e.chunk.js",
+    "static/css/main.9cd0f281.chunk.css",
+    "static/js/main.602b1510.chunk.js"
+  ]
+}
