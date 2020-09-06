@@ -5,12 +5,14 @@ import styles from './MonsterCard.module.css';
 import { capitalize, getAbilityModifier, makeCancelable } from '../../util/utilities';
 import TravelerD20 from '../../icons/d20';
 import * as dice from 'dice.js';
+import { useThemeSwitcher } from 'react-css-theme-switcher';
 
 interface MonsterCardProps {
     monster: string;
 }
 
 const MonsterCard = (props: MonsterCardProps) => {
+    const { currentTheme } = useThemeSwitcher();
     const [monster, setMonster] = useState<Monster>();
 
     const rollAction = (action: Action) => {
@@ -55,7 +57,7 @@ const MonsterCard = (props: MonsterCardProps) => {
     }, [props]);
 
     return (
-        <Card loading={!monster} style={{marginTop: 20, backgroundColor: '#F8F2D5'}}>
+        <Card loading={!monster} style={{marginTop: 20, backgroundColor: currentTheme === 'light' ? '#F8F2D5' : 'unset'}}>
             {monster && (
                 <>
                     <PageHeader
