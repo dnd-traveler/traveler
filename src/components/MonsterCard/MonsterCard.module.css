@@ -1,0 +1,9 @@
+.image {
+    margin: 0 0 0 60px;
+    display: flex;
+    align-items: center;
+}
+
+.monsterParagraph {
+    margin-bottom: 0.3em!important;
+}

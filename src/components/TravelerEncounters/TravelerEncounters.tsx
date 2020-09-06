@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 
-import { useEncounters } from '../../util/use-encounters';
+import { Encounter, useEncounters } from '../../util/use-encounters';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useEffect, useState } from 'react';
 import { Button, Select, Space, Tooltip, Typography } from 'antd';
 import dice from 'dice.js';
 import Chance from 'chance';
+import MonsterCard from '../MonsterCard/MonsterCard';
 
 const chance = new Chance.Chance();
 
@@ -14,7 +15,7 @@ const TravelerEncounters = () => {
     const time = useSelector((state: RootState) => state.time);
     const { generateEncounter, generateNightEncounter, forceEncounter, forceHostileEncounter, forceNeutralEncounter, forceFeatureEncounter } = useEncounters();
 
-    const [currentEncounter, setCurrentEncounter] = useState<string>();
+    const [currentEncounter, setCurrentEncounter] = useState<Encounter>();
     const [oldTime, setOldTime] = useState<number>();
     const [forceEncounterType, setForceEncounterType] = useState('random');
 
@@ -35,7 +36,7 @@ const TravelerEncounters = () => {
             return null;
         }
 
-        const encounterStrArray = currentEncounter.split(' ');
+        const encounterStrArray = currentEncounter.text.split(' ');
         const encounterJsx = encounterStrArray.map(word => {
             const regex = /(\d+)?d(\d+)([+-]\d+)?/ig;
 
@@ -96,6 +97,10 @@ const TravelerEncounters = () => {
 
                 <Button type="primary" danger onClick={setEncounter}>Force Encounter</Button>
             </Space>
+
+            {currentEncounter && currentEncounter.metadata.monsters.map(monster => (
+                <MonsterCard monster={monster} key={chance.guid()} />
+            ))}
         </div>
     );
 };

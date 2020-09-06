@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { Button, Card, Col, Layout, Row } from 'antd';
 import TravelerTime from './components/TravelerTime/TravelerTime';
-import TravelerNotes from './components/TravelerNotes/TravelerNotes';
 import TravelerEncounters from './components/TravelerEncounters/TravelerEncounters';
 import TravelerWeather from './components/TravelerWeather/TravelerWeather';
 import { useDispatch, useSelector } from 'react-redux';
@@ -71,14 +70,9 @@ function App() {
                             <TravelerWeather />
                         </Card>
                     </Col>
-                    <Col span={8}>
+                    <Col span={16}>
                         <Card title="Encounters" loading={encounterLoading}>
                             <TravelerEncounters />
-                        </Card>
-                    </Col>
-                    <Col span={8}>
-                        <Card title="Notes">
-                            <TravelerNotes />
                         </Card>
                     </Col>
                 </Row>

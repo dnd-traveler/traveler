@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://yeager-j.github.io/traveler/",
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "@babel/core": "7.9.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@svgr/webpack": "4.3.3",

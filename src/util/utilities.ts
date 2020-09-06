@@ -15,3 +15,29 @@ export const formatTime = (hour: number): string => {
 export const capitalize = (input: string): string => {
     return input.substr(0, 1).toUpperCase() + input.substr(1).toLowerCase();
 }
+
+export const getAbilityModifier = (ability: number): number => {
+    return Math.floor((ability - 10) / 2);
+}
+
+export const makeCancelable = <T>(promise: Promise<T>): { promise: Promise<T>; cancel(): void } => {
+    let hasCanceled = false;
+
+    const wrappedPromise = new Promise<T>((resolve, reject) => {
+        promise.then(
+            value => hasCanceled
+                ? reject({ isCanceled: true })
+                : resolve(value),
+            error => hasCanceled
+                ? reject({ isCanceled: true })
+                : reject(error),
+        );
+    });
+
+    return {
+        promise: wrappedPromise,
+        cancel(): void {
+            hasCanceled = true;
+        },
+    };
+};
