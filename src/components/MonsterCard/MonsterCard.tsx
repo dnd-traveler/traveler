@@ -13,6 +13,7 @@ interface MonsterCardProps {
 
 const MonsterCard = (props: MonsterCardProps) => {
     const { currentTheme } = useThemeSwitcher();
+    const [loading, setLoading] = useState(false);
     const [monster, setMonster] = useState<Monster>();
 
     const rollAction = (action: Action) => {
@@ -44,20 +45,25 @@ const MonsterCard = (props: MonsterCardProps) => {
 
     useEffect(() => {
         const fetchMonster = makeCancelable(fetch(`https://api.open5e.com/monsters/${props.monster}`));
+        setLoading(true);
 
         fetchMonster
             .promise
             .then(response => response.json())
-            .then(setMonster)
+            .then(response => {
+                setLoading(false);
+                setMonster(response);
+            })
             .catch(console.error);
 
         return () => {
+            setLoading(false);
             fetchMonster.cancel();
         }
     }, [props]);
 
     return (
-        <Card loading={!monster} style={{marginTop: 20, backgroundColor: currentTheme === 'light' ? '#F8F2D5' : 'unset'}}>
+        <Card loading={loading} style={{marginTop: 20, backgroundColor: currentTheme === 'light' ? '#F8F2D5' : 'unset'}}>
             {monster && (
                 <>
                     <PageHeader
@@ -162,14 +168,18 @@ const MonsterCard = (props: MonsterCardProps) => {
                                     <Typography.Text>{monster.languages.split(' ').map(capitalize).join(' ')}</Typography.Text>
                                 </Typography.Paragraph>
 
-                                <hr />
+                                {Array.isArray(monster.special_abilities) && (
+                                    <>
+                                        <hr />
 
-                                {Array.isArray(monster.special_abilities) && monster.special_abilities.map((ability, i) => (
-                                    <Typography.Paragraph className={styles.monsterParagraph} key={i}>
-                                        <Typography.Text strong>{ability.name} </Typography.Text>
-                                        <Typography.Text>{ability.desc}</Typography.Text>
-                                    </Typography.Paragraph>
-                                ))}
+                                        {monster.special_abilities.map((ability, i) => (
+                                            <Typography.Paragraph className={styles.monsterParagraph} key={i}>
+                                                <Typography.Text strong>{ability.name} </Typography.Text>
+                                                <Typography.Text>{ability.desc}</Typography.Text>
+                                            </Typography.Paragraph>
+                                        ))}
+                                    </>
+                                )}
 
                                 {Array.isArray(monster.legendary_actions) && (
                                     <>

@@ -4,10 +4,11 @@ import { Encounter, useEncounters } from '../../util/use-encounters';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useEffect, useState } from 'react';
-import { Button, Select, Space, Tooltip, Typography } from 'antd';
+import { Button, Select, Space, Tooltip, Typography, Tabs } from 'antd';
 import dice from 'dice.js';
 import Chance from 'chance';
 import MonsterCard from '../MonsterCard/MonsterCard';
+import { formatName } from '../../util/utilities';
 
 const chance = new Chance.Chance();
 
@@ -98,9 +99,13 @@ const TravelerEncounters = () => {
                 <Button type="primary" danger onClick={setEncounter}>Force Encounter</Button>
             </Space>
 
-            {currentEncounter && currentEncounter.metadata.monsters.map(monster => (
-                <MonsterCard monster={monster} key={chance.guid()} />
-            ))}
+            <Tabs defaultActiveKey="1">
+                {currentEncounter && currentEncounter.metadata.monsters.map((monster, i) => (
+                    <Tabs.TabPane tab={formatName(monster)} tabKey={i.toString()} key={i}>
+                        <MonsterCard monster={monster} />
+                    </Tabs.TabPane>
+                ))}
+            </Tabs>
         </div>
     );
 };

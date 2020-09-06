@@ -20,6 +20,10 @@ export const getAbilityModifier = (ability: number): number => {
     return Math.floor((ability - 10) / 2);
 }
 
+export const formatName = (name: string): string => {
+    return name.replace('-', ' ').split(' ').map(capitalize).join(' ');
+};
+
 export const makeCancelable = <T>(promise: Promise<T>): { promise: Promise<T>; cancel(): void } => {
     let hasCanceled = false;
 
