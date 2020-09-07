@@ -11,6 +11,7 @@ import { setHour, setSeason, setDay } from './store/time/time.slice';
 import TravelerInitiative from './components/TravelerInitiative/TravelerInitiative';
 import TravelerPlayers from './components/TravelerPlayers/TravelerPlayers';
 import { activate, deactivate } from './store/jojo/jojo.slice';
+import TravelerNotes from './components/TravelerNotes/TravelerNotes';
 
 const {Header, Content, Footer} = Layout;
 
@@ -95,6 +96,10 @@ function App() {
 
                         <Card title="Player Characters" style={{marginTop: 16}}>
                             <TravelerPlayers />
+                        </Card>
+
+                        <Card title="Notes" style={{marginTop: 16}}>
+                            <TravelerNotes />
                         </Card>
                     </Col>
                     <Col span={16}>

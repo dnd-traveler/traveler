@@ -1,8 +1,10 @@
 .initiativeBoxLight {
+    transition: all 0.2s linear;
     border: 2px solid #d9d9d9!important;
 }
 
 .initiativeBoxDark {
+    transition: all 0.2s linear;
     border: 2px solid #505050!important;
 }
 

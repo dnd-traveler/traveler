@@ -13,6 +13,7 @@ import { formatName } from '../../util/utilities';
 const chance = new Chance.Chance();
 
 const TravelerEncounters = () => {
+    // TODO Allow user to customize encounter probability. Dropdown, 1d4, 1d6, 1d8, 1d12, 1d20
     const time = useSelector((state: RootState) => state.time);
     const { generateEncounter, generateNightEncounter, forceEncounter, forceHostileEncounter, forceNeutralEncounter, forceFeatureEncounter } = useEncounters();
 
