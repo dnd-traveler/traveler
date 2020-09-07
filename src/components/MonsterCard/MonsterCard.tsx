@@ -71,6 +71,7 @@ const MonsterCard = (props: MonsterCardProps) => {
     }, []);
 
     useEffect(() => {
+        console.log('props changed', props);
         const fetchMonster = makeCancelable(fetch(`https://api.open5e.com/monsters/${props.monster}`));
         setLoading(true);
 
@@ -111,7 +112,7 @@ const MonsterCard = (props: MonsterCardProps) => {
                         subTitle={`${monster.size} ${monster.type}, ${monster.alignment}`}
                         tags={<Tag color="red">CR {monster.challenge_rating}</Tag>}
                         extra={[
-                            <>
+                            <div key={1}>
                                 {props.rollInitiative && (
                                     <Space>
                                         <Select
@@ -134,7 +135,7 @@ const MonsterCard = (props: MonsterCardProps) => {
                                         </Button>
                                     </Space>
                                 )}
-                            </>
+                            </div>
                         ]}
                     >
                         <Row gutter={16}>
@@ -341,4 +342,4 @@ const AbilityScore = ({ ability, score }: { ability: string, score: number }) =>
     );
 };
 
-export default MonsterCard;
+export default React.memo(MonsterCard);
