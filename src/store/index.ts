@@ -2,10 +2,14 @@ import { combineReducers } from 'redux';
 
 import timeReducer from './time/time.slice';
 import weatherReducer from './weather/weather.slice';
+import playersReducer from './players/players.slice';
+import initiativeReducer from './initiative/initiative.slice';
 
 const rootReducer = combineReducers({
     time: timeReducer,
-    weather: weatherReducer
+    weather: weatherReducer,
+    players: playersReducer,
+    initiative: initiativeReducer
 });
 
 export default rootReducer;

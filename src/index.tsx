@@ -20,7 +20,6 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-    console.log('storing...', store.getState());
     localStorage.setItem('traveler-state', JSON.stringify(store.getState()));
 });
 

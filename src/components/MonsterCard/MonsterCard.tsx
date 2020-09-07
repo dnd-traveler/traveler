@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Action, Monster } from '../../types/monster';
 import { Button, Card, Col, PageHeader, Row, Tag, Typography, Space, notification } from 'antd';
 import styles from './MonsterCard.module.css';
@@ -6,6 +6,11 @@ import { capitalize, getAbilityModifier, makeCancelable } from '../../util/utili
 import TravelerD20 from '../../icons/d20';
 import * as dice from 'dice.js';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
+import { useDispatch } from 'react-redux';
+import { addEntity } from '../../store/initiative/initiative.slice';
+import Chance from 'chance';
+
+const chance = new Chance();
 
 interface MonsterCardProps {
     monster: string;
@@ -13,6 +18,7 @@ interface MonsterCardProps {
 
 const MonsterCard = (props: MonsterCardProps) => {
     const { currentTheme } = useThemeSwitcher();
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [monster, setMonster] = useState<Monster>();
 
@@ -43,6 +49,18 @@ const MonsterCard = (props: MonsterCardProps) => {
         }
     };
 
+    const rollInitiative = useCallback(() => {
+        if (monster) {
+            dispatch(addEntity({
+                ...monster,
+                initiative: dice.roll('d20') + getAbilityModifier(monster.dexterity),
+                id: chance.guid(),
+                currentHP: monster.hit_points,
+                type: 'npc'
+            }));
+        }
+    }, [dispatch, monster]);
+
     useEffect(() => {
         const fetchMonster = makeCancelable(fetch(`https://api.open5e.com/monsters/${props.monster}`));
         setLoading(true);
@@ -67,11 +85,11 @@ const MonsterCard = (props: MonsterCardProps) => {
             {monster && (
                 <>
                     <PageHeader
-                        title={monster.name}
+                        title={<a target="_blank" href={`https://www.dndbeyond.com/monsters/${monster.slug}`} rel="noopener noreferrer">{monster.name}</a>}
                         subTitle={`${monster.size} ${monster.type}, ${monster.alignment}`}
                         tags={<Tag color="red">CR {monster.challenge_rating}</Tag>}
                         extra={[
-                            <Button key={1} type="primary" target="_blank" href={`https://www.dndbeyond.com/monsters/${monster.slug}`}>D&D Beyond</Button>
+                            <Button key={1} type="primary" danger onClick={rollInitiative}>Roll Initiative!</Button>
                         ]}
                     >
                         <Row gutter={16}>
@@ -94,7 +112,7 @@ const MonsterCard = (props: MonsterCardProps) => {
                                 </Typography.Paragraph>
 
                                 <Typography.Paragraph className={styles.monsterParagraph}>
-                                    <Typography.Text strong>Roll Initiative!</Typography.Text> +{getAbilityModifier(monster.dexterity)}
+                                    <Typography.Text strong>Initiative</Typography.Text> +{getAbilityModifier(monster.dexterity)}
                                 </Typography.Paragraph>
 
                                 <hr />

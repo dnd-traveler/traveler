@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './store';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { setHour, setSeason, setDay } from './store/time/time.slice';
+import TravelerInitiative from './components/TravelerInitiative/TravelerInitiative';
+import TravelerPlayers from './components/TravelerPlayers/TravelerPlayers';
 
 const {Header, Content, Footer} = Layout;
 
@@ -22,7 +24,6 @@ function App() {
         dispatch(setHour(7));
         dispatch(setDay(1));
         dispatch(setSeason('spring'));
-        localStorage.removeItem('traveler-state');
     }, [dispatch]);
 
     useEffect(() => {
@@ -41,7 +42,7 @@ function App() {
         setTimeout(() => {
             setEncounterLoading(false);
             setWeatherLoading(false);
-        }, 500);
+        }, 300);
     }, [time]);
 
     if (status === "loading") {
@@ -64,15 +65,23 @@ function App() {
                     </Col>
                 </Row>
 
-                <Row gutter={16} style={{marginTop: 10}}>
+                <Row gutter={16} style={{marginTop: 16}}>
                     <Col span={8}>
                         <Card title="Weather" loading={weatherLoading}>
                             <TravelerWeather />
+                        </Card>
+
+                        <Card title="Player Characters" style={{marginTop: 16}}>
+                            <TravelerPlayers />
                         </Card>
                     </Col>
                     <Col span={16}>
                         <Card title="Encounters" loading={encounterLoading}>
                             <TravelerEncounters />
+                        </Card>
+
+                        <Card title="Initiative Tracker" style={{marginTop: 16}}>
+                            <TravelerInitiative />
                         </Card>
                     </Col>
                 </Row>
