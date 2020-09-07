@@ -10,21 +10,43 @@ import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { setHour, setSeason, setDay } from './store/time/time.slice';
 import TravelerInitiative from './components/TravelerInitiative/TravelerInitiative';
 import TravelerPlayers from './components/TravelerPlayers/TravelerPlayers';
+import { activate, deactivate } from './store/jojo/jojo.slice';
 
 const {Header, Content, Footer} = Layout;
 
 function App() {
     const time = useSelector((state: RootState) => state.time);
     const dispatch = useDispatch();
+    const jojo = useSelector((state: RootState) => state.jojo);
     const { switcher, status, themes } = useThemeSwitcher();
     const [encounterLoading, setEncounterLoading] = useState(false);
     const [weatherLoading, setWeatherLoading] = useState(false);
+    const [clicks, setClicks] = useState(0);
 
     const resetState = useCallback(() => {
         dispatch(setHour(7));
         dispatch(setDay(1));
         dispatch(setSeason('spring'));
     }, [dispatch]);
+
+    const clickHandler = () => {
+        setClicks(prevState => prevState + 1);
+    };
+
+    useEffect(() => {
+        if (clicks >= 5) {
+            if (jojo.active) {
+                dispatch(deactivate());
+            } else {
+                dispatch(activate());
+
+                const openingAudio = new Audio('/media/jojo-opening.mp4');
+                openingAudio.play();
+            }
+
+            setClicks(0);
+        }
+    }, [clicks, dispatch, jojo]);
 
     useEffect(() => {
         switcher({
@@ -52,7 +74,7 @@ function App() {
     return (
         <Layout className="layout">
             <Header className="header">
-                <div className="logo">Traveler</div>
+                <div className="logo" onClick={clickHandler}>{jojo.active ? 'JOJO\'S BIZARRE D&D APP' : 'Traveler'}</div>
                 <div style={{flex: 1}} />
                 <Button type="primary" danger onClick={resetState}>Reset Time</Button>
             </Header>

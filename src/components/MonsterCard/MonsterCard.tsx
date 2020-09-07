@@ -112,7 +112,7 @@ const MonsterCard = (props: MonsterCardProps) => {
                                 </Typography.Paragraph>
 
                                 <Typography.Paragraph className={styles.monsterParagraph}>
-                                    <Typography.Text strong>Initiative</Typography.Text> +{getAbilityModifier(monster.dexterity)}
+                                    <Typography.Text strong>Initiative</Typography.Text> {monster.dexterity >= 10 && '+'}{getAbilityModifier(monster.dexterity)}
                                 </Typography.Paragraph>
 
                                 <hr />

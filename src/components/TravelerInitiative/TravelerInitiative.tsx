@@ -9,15 +9,22 @@ import {
     editEntity,
     InitiativePlayerCharacter, InitiativeNonPlayerCharacter, removeEntity
 } from '../../store/initiative/initiative.slice';
-import { Button, Collapse, InputNumber, List, Space, Statistic } from 'antd';
+import { Button, Collapse, InputNumber, List, Space, Statistic, Typography } from 'antd';
 import { PlayerCharacter } from '../../store/players/players.slice';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import { useThemeSwitcher } from 'react-css-theme-switcher';
 import classNames from 'classnames';
 import styles from './TravelerInitiative.module.css';
+import MonsterSearch from './MonsterSearch';
+import { Monster } from '../../types/monster';
+import Chance from 'chance';
+import dice from "dice.js";
+import { getAbilityModifier } from '../../util/utilities';
 
 type PlayerWithInitiative = PlayerCharacter & InitiativePlayerCharacter;
 type PopulatedInitiativeEntity = PlayerWithInitiative | InitiativeNonPlayerCharacter;
+
+const chance = new Chance();
 
 const TravelerInitiative = () => {
     const dispatch = useDispatch();
@@ -62,12 +69,22 @@ const TravelerInitiative = () => {
         if (!entityToEdit || entityToEdit.type !== 'npc') {
             return;
         }
-        
+
         dispatch(editEntity({
             id: eid,
             currentHP: Math.max(Math.min(entityToEdit.currentHP + hp, entityToEdit.hit_points), 0)
         }))
     }, [dispatch, populatedEntities]);
+
+    const addMonsterToInitiative = useCallback((monster: Monster) => {
+        dispatch(addEntity({
+            ...monster,
+            initiative: dice.roll('d20') + getAbilityModifier(monster.dexterity),
+            id: chance.guid(),
+            currentHP: monster.hit_points,
+            type: 'npc'
+        }));
+    }, [dispatch]);
 
     const removeHandler = useCallback((eid: string) => {
         dispatch(removeEntity(eid));
@@ -86,6 +103,8 @@ const TravelerInitiative = () => {
                         initiative: entity.initiative,
                         type: 'player'
                     });
+                } else {
+                    dispatch(removeEntity(entity.id));
                 }
             } else if (entity.type === 'npc') {
                 list.push(entity);
@@ -93,15 +112,20 @@ const TravelerInitiative = () => {
         }
 
         setPopulatedEntities(list);
-    }, [entities, players]);
+    }, [entities, players, dispatch]);
 
     return (
         <>
-            <Space>
-                <Button onClick={addPlayersToInitiative}>Add All Players</Button>
-                <Button onClick={nextInitiativeHandler}>Next Initiative</Button>
-                <Button onClick={clearInitiativeHandler} danger>Clear Initiative</Button>
-            </Space>
+            <div style={{display: 'flex'}}>
+                <Space>
+                    <Button onClick={addPlayersToInitiative}>Add All Players</Button>
+                    <Button onClick={nextInitiativeHandler}>Next Initiative</Button>
+                    <Button onClick={clearInitiativeHandler} danger>Clear Initiative</Button>
+                </Space>
+
+                <div style={{flex: 1}} />
+                <MonsterSearch onResult={addMonsterToInitiative} />
+            </div>
 
             <List
                 itemLayout="vertical"
@@ -118,6 +142,13 @@ const TravelerInitiative = () => {
                     />
                 )}
             />
+
+            <Typography.Paragraph
+                type="secondary"
+                style={{textAlign: 'center', fontStyle: 'italic', marginBottom: 0}}
+            >
+                Tip: Click the initiative number to change it.
+            </Typography.Paragraph>
         </>
     );
 };

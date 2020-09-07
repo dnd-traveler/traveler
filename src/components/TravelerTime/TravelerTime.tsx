@@ -10,10 +10,16 @@ import { capitalize, formatTime } from '../../util/utilities';
 
 const TravelerTime = () => {
     const dispatch = useDispatch();
+    const jojo = useSelector((state: RootState) => state.jojo);
     const currentTime = useSelector((state: RootState) => state.time);
 
     const advanceTime = () => {
         dispatch(incrementHour());
+
+        if (jojo.active) {
+            const timeSkipAudio = new Audio('./media/time-skip.mp3');
+            timeSkipAudio.play();
+        }
     };
 
     const advanceSeason = () => {
