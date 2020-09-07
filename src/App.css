@@ -14,7 +14,8 @@
   margin: 16px 24px 16px 0;
   float: left;
   color: white;
-  font-size: 24px;
-  line-height: 28px;
+  line-height: 30px;
   user-select: none;
+  font-family: 'Nodesto Caps Condensed', Helvetica, sans-serif;
+  font-size: 3em;
 }

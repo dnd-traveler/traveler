@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { Encounter, useEncounters } from '../../util/use-encounters';
+import { Encounter, GeneratorDie, useEncounters } from '../../util/use-encounters';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useEffect, useState } from 'react';
@@ -20,18 +20,27 @@ const TravelerEncounters = () => {
     const [currentEncounter, setCurrentEncounter] = useState<Encounter>();
     const [oldTime, setOldTime] = useState<number>();
     const [forceEncounterType, setForceEncounterType] = useState('random');
+    const [generatorDie, setGeneratorDie] = useState<GeneratorDie>('d10');
 
     useEffect(() => {
         if (oldTime !== time.hour) {
             if (time.hour < 6 || time.hour > 20) {
                 setCurrentEncounter(generateNightEncounter());
             } else {
-                setCurrentEncounter(generateEncounter());
+                setCurrentEncounter(generateEncounter(generatorDie));
             }
 
             setOldTime(time.hour);
         }
-    }, [time, oldTime, generateEncounter, generateNightEncounter]);
+    }, [time, oldTime, generateEncounter, generateNightEncounter, generatorDie]);
+
+    useEffect(() => {
+        const storedGeneratorDie = localStorage.getItem('traveler-generator-die') as GeneratorDie | null;
+
+        if (storedGeneratorDie) {
+            setGeneratorDie(storedGeneratorDie);
+        }
+    }, []);
 
     const parsedEncounter = useCallback(() => {
         if (!currentEncounter) {
@@ -82,28 +91,55 @@ const TravelerEncounters = () => {
         setForceEncounterType(value);
     }, []);
 
+    const generatorDieHandler = useCallback((value: GeneratorDie) => {
+        setGeneratorDie(value);
+        localStorage.setItem('traveler-generator-die', value);
+    }, [setGeneratorDie]);
+
     return (
         <div>
             <Typography.Paragraph>{parsedEncounter()}</Typography.Paragraph>
 
-            <Space>
-                <Select
-                    defaultValue="random"
-                    onChange={forceEncounterChangeHandler}
-                >
-                    <Select.Option value="random">Random</Select.Option>
-                    <Select.Option value="hostile">Hostile</Select.Option>
-                    <Select.Option value="neutral">Neutral</Select.Option>
-                    <Select.Option value="feature">Feature</Select.Option>
-                </Select>
+            <div style={{display: 'flex'}}>
+                <Space>
+                    <Select
+                        defaultValue="random"
+                        onChange={forceEncounterChangeHandler}
+                    >
+                        <Select.Option value="random">Random</Select.Option>
+                        <Select.Option value="hostile">Hostile</Select.Option>
+                        <Select.Option value="neutral">Neutral</Select.Option>
+                        <Select.Option value="feature">Feature</Select.Option>
+                    </Select>
 
-                <Button type="primary" danger onClick={setEncounter}>Force Encounter</Button>
-            </Space>
+                    <Button type="primary" danger onClick={setEncounter}>Force Encounter</Button>
+                </Space>
+
+                <div style={{flex: 'auto'}} />
+
+                <Space>
+                    <Tooltip title="Night encounters are always hostile, so the chance is always 1d20.">
+                        <Typography.Text strong>Day Encounter Chance</Typography.Text>
+                    </Tooltip>
+
+                    <Select
+                        value={generatorDie}
+                        onChange={generatorDieHandler}
+                    >
+                        <Select.Option value="d4">1d4</Select.Option>
+                        <Select.Option value="d6">1d6</Select.Option>
+                        <Select.Option value="d8">1d8</Select.Option>
+                        <Select.Option value="d10">1d10</Select.Option>
+                        <Select.Option value="d12">1d12</Select.Option>
+                        <Select.Option value="d20">1d20</Select.Option>
+                    </Select>
+                </Space>
+            </div>
 
             <Tabs defaultActiveKey="1">
                 {currentEncounter && currentEncounter.metadata.monsters.map((monster, i) => (
                     <Tabs.TabPane tab={formatName(monster)} tabKey={i.toString()} key={i}>
-                        <MonsterCard monster={monster} />
+                        <MonsterCard monster={monster} rollInitiative />
                     </Tabs.TabPane>
                 ))}
             </Tabs>

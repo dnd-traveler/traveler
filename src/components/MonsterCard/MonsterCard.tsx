@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Action, Monster } from '../../types/monster';
-import { Button, Card, Col, PageHeader, Row, Tag, Typography, Space, notification } from 'antd';
+import { Button, Card, Col, PageHeader, Row, Tag, Typography, Space, notification, Select } from 'antd';
 import styles from './MonsterCard.module.css';
 import { capitalize, getAbilityModifier, makeCancelable } from '../../util/utilities';
-import TravelerD20 from '../../icons/d20';
+import TravelerD20 from '../../assets/icons/d20';
 import * as dice from 'dice.js';
-import { useThemeSwitcher } from 'react-css-theme-switcher';
 import { useDispatch } from 'react-redux';
 import { addEntity } from '../../store/initiative/initiative.slice';
 import Chance from 'chance';
@@ -14,13 +13,14 @@ const chance = new Chance();
 
 interface MonsterCardProps {
     monster: string;
+    rollInitiative?: boolean;
 }
 
 const MonsterCard = (props: MonsterCardProps) => {
-    const { currentTheme } = useThemeSwitcher();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [monster, setMonster] = useState<Monster>();
+    const [rollInitiativeCount, setRollInitiativeCount] = useState<number>(1);
 
     const rollAction = (action: Action) => {
         if (action.damage_dice) {
@@ -51,15 +51,24 @@ const MonsterCard = (props: MonsterCardProps) => {
 
     const rollInitiative = useCallback(() => {
         if (monster) {
-            dispatch(addEntity({
-                ...monster,
-                initiative: dice.roll('d20') + getAbilityModifier(monster.dexterity),
-                id: chance.guid(),
-                currentHP: monster.hit_points,
-                type: 'npc'
-            }));
+            const monsterCount = new Array(rollInitiativeCount);
+            monsterCount.fill(monster);
+
+            for (const m of monsterCount) {
+                dispatch(addEntity({
+                    ...m,
+                    initiative: dice.roll('d20') + getAbilityModifier(m.dexterity),
+                    id: chance.guid(),
+                    currentHP: m.hit_points,
+                    type: 'npc'
+                }));
+            }
         }
-    }, [dispatch, monster]);
+    }, [dispatch, monster, rollInitiativeCount]);
+
+    const rollInitiativeCountHandler = useCallback((value: number) => {
+        setRollInitiativeCount(value);
+    }, []);
 
     useEffect(() => {
         const fetchMonster = makeCancelable(fetch(`https://api.open5e.com/monsters/${props.monster}`));
@@ -81,15 +90,51 @@ const MonsterCard = (props: MonsterCardProps) => {
     }, [props]);
 
     return (
-        <Card loading={loading} style={{marginTop: 20, backgroundColor: currentTheme === 'light' ? '#F8F2D5' : 'unset'}}>
+        <Card loading={loading} className={styles.monsterCard}>
             {monster && (
                 <>
                     <PageHeader
-                        title={<a target="_blank" href={`https://www.dndbeyond.com/monsters/${monster.slug}`} rel="noopener noreferrer">{monster.name}</a>}
+                        title={(
+                            <a
+                                target="_blank"
+                                href={`https://www.dndbeyond.com/monsters/${monster.slug}`}
+                                rel="noopener noreferrer"
+                                style={{
+                                    fontFamily: 'Mr Eaves Small Caps, Helvetica, sans-serif',
+                                    fontSize: '1.5em',
+                                    color: '#822000'
+                                }}
+                            >
+                                {monster.name}
+                            </a>
+                        )}
                         subTitle={`${monster.size} ${monster.type}, ${monster.alignment}`}
                         tags={<Tag color="red">CR {monster.challenge_rating}</Tag>}
                         extra={[
-                            <Button key={1} type="primary" danger onClick={rollInitiative}>Roll Initiative!</Button>
+                            <>
+                                {props.rollInitiative && (
+                                    <Space>
+                                        <Select
+                                            value={rollInitiativeCount}
+                                            onChange={rollInitiativeCountHandler}
+                                        >
+                                            <Select.Option value={1}>x1</Select.Option>
+                                            <Select.Option value={2}>x2</Select.Option>
+                                            <Select.Option value={3}>x3</Select.Option>
+                                            <Select.Option value={4}>x4</Select.Option>
+                                            <Select.Option value={5}>x5</Select.Option>
+                                            <Select.Option value={6}>x6</Select.Option>
+                                            <Select.Option value={7}>x7</Select.Option>
+                                            <Select.Option value={8}>x8</Select.Option>
+                                        </Select>
+
+                                        <Button key={1} danger onClick={rollInitiative}>
+                                            <TravelerD20 />
+                                            Roll Initiative!
+                                        </Button>
+                                    </Space>
+                                )}
+                            </>
                         ]}
                     >
                         <Row gutter={16}>

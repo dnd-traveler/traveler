@@ -12,6 +12,8 @@ export interface Encounter {
     metadata: EncounterMetadata
 }
 
+export type GeneratorDie = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20';
+
 type EncounterTable = {
     [key: number]: Encounter;
 }
@@ -319,8 +321,8 @@ export function useEncounters() {
         }
     }, [forceHostileEncounter]);
 
-    const generateEncounter = useCallback((): Encounter => {
-        if (chance.d10() === 1) {
+    const generateEncounter = useCallback((generator: GeneratorDie): Encounter => {
+        if (chance[generator]() === 1) {
             return forceEncounter();
         } else {
             return nothingEvent;

@@ -19,3 +19,21 @@ pre {
   white-space: -o-pre-wrap;    /* Opera 7 */
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
+
+@font-face {
+  font-family: 'Nodesto Caps Condensed';
+  src: url('./assets/fonts/Nodesto Caps Condensed.otf') format('opentype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Bookinsanity';
+  src: url('./assets/fonts/Bookinsanity.otf') format('opentype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Mr Eaves Small Caps';
+  src: url('./assets/fonts/Mr Eaves Small Caps.otf') format('opentype');
+  font-weight: normal;
+}

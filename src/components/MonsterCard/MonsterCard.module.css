@@ -4,6 +4,10 @@
     align-items: center;
 }
 
-.monsterParagraph {
-    margin-bottom: 0.3em!important;
+.monsterCard {
+    margin-top: 20px;
+    background: url('../../assets/images/stat-block-top-texture.png'),url('../../assets/images/paper-texture.png');
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: no-repeat no-repeat;
 }
