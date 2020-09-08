@@ -19,7 +19,7 @@ import MonsterSearch from './MonsterSearch';
 import { Monster } from '../../types/monster';
 import Chance from 'chance';
 import dice from "dice.js";
-import { getAbilityModifier } from '../../util/utilities';
+import { getAbilityModifier, getRoundTime } from '../../util/utilities';
 
 type PlayerWithInitiative = PlayerCharacter & InitiativePlayerCharacter;
 type PopulatedInitiativeEntity = PlayerWithInitiative | InitiativeNonPlayerCharacter;
@@ -29,7 +29,7 @@ const chance = new Chance();
 const TravelerInitiative = () => {
     const dispatch = useDispatch();
     const players = useSelector((state: RootState) => state.players);
-    const {currentInitiative, entities} = useSelector((state: RootState) => state.initiative);
+    const {currentInitiative, entities, currentRound} = useSelector((state: RootState) => state.initiative);
 
     const [populatedEntities, setPopulatedEntities] = useState<PopulatedInitiativeEntity[]>([]);
 
@@ -125,6 +125,16 @@ const TravelerInitiative = () => {
 
                 <div style={{flex: 1}} />
                 <MonsterSearch onResult={addMonsterToInitiative} />
+            </div>
+
+            <div style={{textAlign: 'center'}}>
+                <Typography.Title level={3}>Round {currentRound + 1}</Typography.Title>
+                <Typography.Paragraph>
+                    <Typography.Text strong>Time Elapsed </Typography.Text>
+                    {getRoundTime(currentRound).minutes}
+                    <span className={styles.separator}>:</span>
+                    {getRoundTime(currentRound).seconds}
+                </Typography.Paragraph>
             </div>
 
             <List

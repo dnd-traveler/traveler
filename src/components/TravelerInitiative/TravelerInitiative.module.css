@@ -23,3 +23,11 @@
 .initiativeBoxDark.active {
     background-color: #04314C;
 }
+
+.separator {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}

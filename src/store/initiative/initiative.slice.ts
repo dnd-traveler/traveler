@@ -19,11 +19,13 @@ export type InitiativeEntity = InitiativePlayerCharacter | InitiativeNonPlayerCh
 interface InitiativeState {
     entities: InitiativeEntity[];
     currentInitiative: number;
+    currentRound: 0
 }
 
 const initialInitiativeState: InitiativeState = {
     entities: [],
-    currentInitiative: 100
+    currentInitiative: 100,
+    currentRound: 0
 }
 
 const initiativeSlice = createSlice({
@@ -57,12 +59,14 @@ const initiativeSlice = createSlice({
 
             if (entitiesAfterCurrentInitiative.length === 0) {
                 state.currentInitiative = Math.max.apply(null, state.entities.map(e => e.initiative));
+                state.currentRound++;
             } else {
                 state.currentInitiative = Math.max.apply(null, entitiesAfterCurrentInitiative.map(e => e.initiative));
             }
         },
         resetInitiative(state) {
             state.currentInitiative = 100;
+            state.currentRound = 0;
         }
     }
 });

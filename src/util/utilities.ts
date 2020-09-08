@@ -45,3 +45,18 @@ export const makeCancelable = <T>(promise: Promise<T>): { promise: Promise<T>; c
         },
     };
 };
+
+export const getRoundTime = (round: number): { minutes: string, seconds: string } => {
+    let seconds = round * 6;
+    let minutes = 0;
+
+    if (seconds >= 60) {
+        minutes = Math.floor(seconds / 60);
+        seconds = seconds % 60;
+    }
+
+    return {
+        minutes: `${minutes < 10 ? `0${minutes}` : minutes}`,
+        seconds: `${seconds < 10 ? `0${seconds}` : seconds}`
+    }
+};
