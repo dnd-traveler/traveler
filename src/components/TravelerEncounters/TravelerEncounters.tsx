@@ -1,38 +1,36 @@
 import React, { useCallback } from 'react';
 
-import { Encounter, GeneratorDie, useEncounters } from '../../util/use-encounters';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+import { Encounter, GeneratorDie, nothingEvent, useEncounters } from '../../util/use-encounters';
 import { useEffect, useState } from 'react';
 import { Button, Select, Space, Tooltip, Typography, Tabs } from 'antd';
 import dice from 'dice.js';
 import Chance from 'chance';
 import MonsterCard from '../MonsterCard/MonsterCard';
 import { formatName } from '../../util/utilities';
+import { subscribe } from 'redux-subscriber';
 
 const chance = new Chance.Chance();
 
 const TravelerEncounters = () => {
-    // TODO Allow user to customize encounter probability. Dropdown, 1d4, 1d6, 1d8, 1d12, 1d20
-    const time = useSelector((state: RootState) => state.time);
     const { generateEncounter, generateNightEncounter, forceEncounter, forceHostileEncounter, forceNeutralEncounter, forceFeatureEncounter } = useEncounters();
 
-    const [currentEncounter, setCurrentEncounter] = useState<Encounter>();
-    const [oldTime, setOldTime] = useState<number>();
+    const [currentEncounter, setCurrentEncounter] = useState<Encounter>(nothingEvent);
     const [forceEncounterType, setForceEncounterType] = useState('random');
     const [generatorDie, setGeneratorDie] = useState<GeneratorDie>('d10');
 
     useEffect(() => {
-        if (oldTime !== time.hour) {
-            if (time.hour < 6 || time.hour > 20) {
+        const unsub = subscribe('time.hour', state => {
+            if (state.time.hour < 6 || state.time.hour > 20) {
                 setCurrentEncounter(generateNightEncounter());
             } else {
                 setCurrentEncounter(generateEncounter(generatorDie));
             }
+        });
 
-            setOldTime(time.hour);
+        return () => {
+            unsub();
         }
-    }, [time, oldTime, generateEncounter, generateNightEncounter, generatorDie]);
+    }, [generateEncounter, generateNightEncounter, generatorDie]);
 
     useEffect(() => {
         const storedGeneratorDie = localStorage.getItem('traveler-generator-die') as GeneratorDie | null;

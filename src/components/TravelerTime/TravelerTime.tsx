@@ -28,7 +28,9 @@ const TravelerTime = () => {
 
     return (
         <div className={styles.TravelerTime}>
-            <Typography.Paragraph strong style={{marginBottom: 0}}>{capitalize(currentTime.season)}</Typography.Paragraph>
+            <Typography.Paragraph strong style={{marginBottom: 0}}>
+                {capitalize(currentTime.season)}
+            </Typography.Paragraph>
 
             <Typography.Title style={{marginTop: 0}}>
                 {formatTime(currentTime.hour)}

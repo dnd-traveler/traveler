@@ -13,15 +13,18 @@ import TravelerPlayers from './components/TravelerPlayers/TravelerPlayers';
 import { activate, deactivate } from './store/jojo/jojo.slice';
 import TravelerNotes from './components/TravelerNotes/TravelerNotes';
 
+import dayGif from './assets/images/day-time.gif';
+import sunsetGif from './assets/images/sunset-time.gif';
+import nightGif from './assets/images/night-time.gif';
+
 const {Header, Content, Footer} = Layout;
 
 function App() {
     const time = useSelector((state: RootState) => state.time);
     const dispatch = useDispatch();
     const jojo = useSelector((state: RootState) => state.jojo);
-    const { switcher, status, themes } = useThemeSwitcher();
-    const [encounterLoading, setEncounterLoading] = useState(false);
-    const [weatherLoading, setWeatherLoading] = useState(false);
+    // const { switcher, status, themes } = useThemeSwitcher();
+    const { status } = useThemeSwitcher();
     const [clicks, setClicks] = useState(0);
 
     const resetState = useCallback(() => {
@@ -32,6 +35,22 @@ function App() {
 
     const clickHandler = () => {
         setClicks(prevState => prevState + 1);
+    };
+
+    const getGifForTime = () => {
+        if (time.hour >= 8 && time.hour < 18) {
+            return dayGif;
+        }
+
+        if (time.hour >= 18 && time.hour < 20) {
+            return sunsetGif;
+        }
+
+        if (time.hour <= 8 && time.hour > 5) {
+            return sunsetGif;
+        }
+
+        return nightGif;
     };
 
     useEffect(() => {
@@ -49,24 +68,11 @@ function App() {
         }
     }, [clicks, dispatch, jojo]);
 
-    useEffect(() => {
-        switcher({
-            theme: time.hour < 6 || time.hour > 20 ? themes.dark : themes.light
-        })
-    }, [time, switcher, themes]);
-
-    useEffect(() => {
-        setEncounterLoading(true);
-
-        if (time.hour % 6 === 0) {
-            setWeatherLoading(true);
-        }
-
-        setTimeout(() => {
-            setEncounterLoading(false);
-            setWeatherLoading(false);
-        }, 300);
-    }, [time]);
+    // useEffect(() => {
+    //     switcher({
+    //         theme: time.hour < 6 || time.hour > 20 ? themes.dark : themes.light
+    //     })
+    // }, [time, switcher, themes]);
 
     if (status === "loading") {
         return null;
@@ -82,7 +88,7 @@ function App() {
             <Content style={{padding: '50px'}}>
                 <Row gutter={16}>
                     <Col span={10} offset={7}>
-                        <Card>
+                        <Card className="time-card" style={{backgroundImage: `url(${getGifForTime()})`}}>
                             <TravelerTime />
                         </Card>
                     </Col>
@@ -90,7 +96,7 @@ function App() {
 
                 <Row gutter={16} style={{marginTop: 16}}>
                     <Col span={8}>
-                        <Card title="Weather" loading={weatherLoading}>
+                        <Card title="Weather">
                             <TravelerWeather />
                         </Card>
 
@@ -103,7 +109,7 @@ function App() {
                         </Card>
                     </Col>
                     <Col span={16}>
-                        <Card title="Encounters" loading={encounterLoading}>
+                        <Card title="Encounters">
                             <TravelerEncounters />
                         </Card>
 

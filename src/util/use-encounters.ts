@@ -273,7 +273,7 @@ const featureEncounters: EncounterTable = {
     }
 };
 
-const nothingEvent: Encounter = {
+export const nothingEvent: Encounter = {
     text: 'Nothing eventful happens.',
     metadata: {
         monsters: []

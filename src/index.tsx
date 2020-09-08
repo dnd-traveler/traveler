@@ -9,6 +9,8 @@ import { Provider } from 'react-redux';
 import rootReducer from './store';
 import { configureStore } from '@reduxjs/toolkit';
 
+import initSubscriber from 'redux-subscriber';
+
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher';
 
 const storageState = localStorage.getItem('traveler-state');
@@ -18,6 +20,8 @@ const store = configureStore({
     reducer: rootReducer,
     preloadedState: persistedState
 });
+
+initSubscriber(store);
 
 store.subscribe(() => {
     localStorage.setItem('traveler-state', JSON.stringify(store.getState()));
