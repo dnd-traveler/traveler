@@ -37,7 +37,7 @@ const initiativeSlice = createSlice({
             const entity = state.entities.find(e => e.id === action.payload.id);
 
             if (entity) {
-                if (action.payload.initiative) {
+                if (action.payload.initiative !== undefined) {
                     entity.initiative = action.payload.initiative;
                 }
 

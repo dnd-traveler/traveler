@@ -189,13 +189,13 @@ const InitiativeEntityItem = (props: InitiativeEntityItemProps) => {
     };
 
     const hitModChangeHandler = (value: string | number | undefined) => {
-        if (value) {
+        if (value !== undefined) {
             setHitMod(+value);
         }
     };
 
     const editInitiativeValueHandler = (value: number | string | undefined) => {
-        if (value) {
+        if (value !== undefined) {
             setEditInitiativeValue(+value);
         }
     };
